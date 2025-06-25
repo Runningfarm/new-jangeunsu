@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/shopLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 상단 바 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical">
+
+        <!-- 포인트 표시 -->
+        <TextView
+            android:id="@+id/pointText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💰 1000"
+            android:textSize="16sp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:layout_alignParentTop="true" />
+
+        <!-- 광고 버튼 + 텍스트 -->
+        <LinearLayout
+            android:id="@+id/adButtonLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/pointText"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/watchAdText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="광고보고 시청 후 가챠 뽑기!"
+                android:textSize="14sp"
+                android:paddingEnd="4dp"
+                android:textColor="@android:color/black" />
+
+            <ImageButton
+                android:id="@+id/watchAdImageButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_ad"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="광고 보기"
+                android:padding="4dp" />
+        </LinearLayout>
+
+        <!-- 남은 횟수 표시 -->
+        <TextView
+            android:id="@+id/remainCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="남은 횟수: 5/5"
+            android:textSize="12sp"
+            android:layout_below="@id/adButtonLayout"
+            android:layout_alignEnd="@id/adButtonLayout"
+            android:layout_marginTop="2dp" />
+    </RelativeLayout>
+
+    <!-- 아이템 리스트 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/shopRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="16dp" />
+
+    <!-- 가챠 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="8dp">
+
+        <Button
+            android:id="@+id/onePickButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1개 뽑기"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/tenPickButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10개 뽑기" />
+    </LinearLayout>
+
+    <!-- 하단 탭바 -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="#EDEDED"
+        android:gravity="center"
+        android:weightSum="6">
+
+        <ImageButton
+            android:id="@+id/tab1Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_home"
+            android:background="@null"
+            android:contentDescription="탭 1" />
+
+        <ImageButton
+            android:id="@+id/tab2Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_running"
+            android:background="@null"
+            android:contentDescription="탭 2" />
+
+        <ImageButton
+            android:id="@+id/tab3Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_quest"
+            android:background="@null"
+            android:contentDescription="탭 3" />
+
+        <ImageButton
+            android:id="@+id/tab4Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_inventory"
+            android:background="@null"
+            android:contentDescription="탭 4" />
+
+        <ImageButton
+            android:id="@+id/tab5Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_shop"
+            android:background="@null"
+            android:contentDescription="탭 5" />
+
+        <ImageButton
+            android:id="@+id/tab6Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_mypage"
+            android:background="@null"
+            android:contentDescription="탭 6" />
+
+    </LinearLayout>
+
+</LinearLayout>
