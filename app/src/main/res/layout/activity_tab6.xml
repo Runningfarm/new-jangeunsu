@@ -74,12 +74,18 @@
     <!-- 하단 탭바 -->
     <LinearLayout
         android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="60dp"
         android:orientation="horizontal"
-        android:background="#EDEDED"
+        android:background="#F5F5F5"
+        android:paddingTop="6dp"
+        android:elevation="8dp"
         android:gravity="center"
-        android:weightSum="6">
+        android:weightSum="6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
         <ImageButton
             android:id="@+id/tab1Button"
             android:layout_width="0dp"
@@ -87,7 +93,12 @@
             android:layout_weight="1"
             android:src="@drawable/ic_home"
             android:background="@null"
-            android:contentDescription="탭1" />
+            android:contentDescription="탭 1" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:id="@+id/tab2Button"
             android:layout_width="0dp"
@@ -95,15 +106,25 @@
             android:layout_weight="1"
             android:src="@drawable/ic_running"
             android:background="@null"
-            android:contentDescription="탭2" />
+            android:contentDescription="탭 2" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:id="@+id/tab3Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_quest"
             android:background="@null"
-            android:contentDescription="탭3" />
+            android:contentDescription="탭 3"
+            android:src="@drawable/ic_quest" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:id="@+id/tab4Button"
             android:layout_width="0dp"
@@ -111,15 +132,12 @@
             android:layout_weight="1"
             android:src="@drawable/ic_inventory"
             android:background="@null"
-            android:contentDescription="탭4" />
-        <ImageButton
-            android:id="@+id/tab5Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_shop"
-            android:background="@null"
-            android:contentDescription="탭5" />
+            android:contentDescription="탭 4" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:id="@+id/tab6Button"
             android:layout_width="0dp"
@@ -127,6 +145,6 @@
             android:layout_weight="1"
             android:src="@drawable/ic_mypage"
             android:background="@null"
-            android:contentDescription="탭6" />
+            android:contentDescription="탭 6" />
     </LinearLayout>
 </LinearLayout>

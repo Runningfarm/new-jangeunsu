@@ -36,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
+import java.util.ArrayList; // 6/30
 
 
 import androidx.appcompat.app.AlertDialog;
@@ -56,10 +57,14 @@ public class Tab2Activity extends AppCompatActivity implements OnMapReadyCallbac
     private PolylineOptions polylineOptions;
     private Polyline polyline;
     private boolean isFirstLocation = true;
+    private ArrayList<LatLng> runPath = new ArrayList<>(); // 6/30
 
     // 거리 누적, 위치 기억용
     private double totalDistance = 0.0;
     private Location lastLocation = null;
+    private float weight = 0f;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,18 +125,8 @@ public class Tab2Activity extends AppCompatActivity implements OnMapReadyCallbac
                         Log.d("러닝", "distance=" + tvDistance.getText().toString());
                         Log.d("러닝", "kcal=" + tvKcal.getText().toString());
                         Log.d("러닝", "pace=" + tvPace.getText().toString());
-                        // 서버로 결과 전송
-                         sendRunResultToServer();  // 여기서 "서버 성공"때만 화면이동해야 함
-                        // 화면 이동은 sendRunResultToServer에서만
 
-                        // 인텐트에 값 넣어서 넘기기
-                        Intent intent = new Intent(Tab2Activity.this, RunningResult.class);
-                        intent.putExtra("time", timeTextView.getText().toString());
-                        intent.putExtra("distance", tvDistance.getText().toString());
-                        intent.putExtra("kcal", tvKcal.getText().toString());
-                        intent.putExtra("pace", tvPace.getText().toString());
-                        startActivity(intent);
-                        finish();
+                        sendRunResultToServer();
                     })
                     .setNegativeButton("아니오", (dialog, which) -> dialog.dismiss())
                     .setCancelable(false)
@@ -147,29 +142,40 @@ public class Tab2Activity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(new Intent(Tab2Activity.this, Tab3Activity.class)));
         findViewById(R.id.tab4Button).setOnClickListener(view ->
                 startActivity(new Intent(Tab2Activity.this, Tab4Activity.class)));
-        findViewById(R.id.tab5Button).setOnClickListener(view ->
-                startActivity(new Intent(Tab2Activity.this, Tab5Activity.class)));
         findViewById(R.id.tab6Button).setOnClickListener(view ->
                 startActivity(new Intent(Tab2Activity.this, Tab6Activity.class)));
 
         loadQuestProgressFromServer();
+
     }
 
+    private double getMetsByPace(double pace) {
+        if (pace < 6) return 3.5;
+        if (pace < 8) return 6.0;
+        if (pace < 10) return 8.3;
+        if (pace < 12) return 10.5;
+        if (pace < 14) return 12.8;
+        return 15.0;
+    }
     private void sendRunResultToServer() {
+        runPath = new ArrayList<>(polylineOptions.getPoints()); // 6/30
+
         // id 불러오는 코드
         SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
         String id = pref.getString("id", null);
         String token = pref.getString("token", null);
+        float weight = pref.getFloat("weight", 0f);
 
         // 만약 id가 없으면(로그인 안됨) 그냥 종료
         if (id == null || token == null) {
             Toast.makeText(this, "로그인 정보 없음!", Toast.LENGTH_SHORT).show();
             return;
         }
-        double distance = Double.parseDouble(tvDistance.getText().toString().replace(" km", ""));
-        int time = (int) (elapsedTime / 1000);
-        int kcal = Integer.parseInt(tvKcal.getText().toString().replace(" kcal", ""));
-        double pace = Double.parseDouble(tvPace.getText().toString().replace(" km/h", ""));
+        double distance = totalDistance; // km
+        int time = (int)(elapsedTime / 1000); // 초
+        double pace = time > 0 ? distance / (time / 3600.0) : 0.0; // km/h
+        double MET = getMetsByPace(pace);
+        int kcal = (int) Math.round(MET * weight * (time / 3600.0));
 
         RunResultRequest request = new RunResultRequest(id, distance, time, kcal, pace);
 
@@ -185,6 +191,7 @@ public class Tab2Activity extends AppCompatActivity implements OnMapReadyCallbac
                     intent.putExtra("distance", tvDistance.getText().toString());
                     intent.putExtra("kcal", tvKcal.getText().toString());
                     intent.putExtra("pace", tvPace.getText().toString());
+                    intent.putParcelableArrayListExtra("path", runPath); // 6/30
                     startActivity(intent);
                     finish();
                 } else {
@@ -303,23 +310,6 @@ public class Tab2Activity extends AppCompatActivity implements OnMapReadyCallbac
         }
     };
 
-    private void updateRunningData(Location currentLocation) {
-        if (lastLocation != null) {
-            float distance = lastLocation.distanceTo(currentLocation); // m 단위
-            totalDistance += distance / 1000.0; // km로 변환
-        }
-        lastLocation = currentLocation;
-
-        // 칼로리/페이스 계산 예시
-        int kcal = (int)(totalDistance * 60);
-        double pace = totalDistance > 0 ? ((elapsedTime / 1000.0) / 60.0) / totalDistance : 0;
-
-        // 화면에 표시
-        tvDistance.setText(String.format("%.2f km", totalDistance));
-        tvKcal.setText(String.format("%d kcal", kcal));
-        tvPace.setText(String.format("%.2f km/h", pace));
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -367,8 +357,9 @@ public class Tab2Activity extends AppCompatActivity implements OnMapReadyCallbac
         long seconds = elapsedTime / 1000;
         double hours = seconds / 3600.0;
         // 칼로리, 페이스 계산
-        int kcal = (int)(totalDistance * 60);
         double pace = hours > 0 ? (totalDistance / hours) : 0.0; // km/h
+        double MET = getMetsByPace(pace);
+        int kcal = (int) Math.round(MET * weight * hours);
 
         tvDistance.setText(String.format("%.2f km", totalDistance));
         tvKcal.setText(String.format("%d kcal", kcal));

@@ -21,8 +21,8 @@ import android.util.Log;
 public class Tab3Activity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private ProgressBar[] progressBars = new ProgressBar[6];
-    private Button[] claimButtons = new Button[6];
+    private ProgressBar[] progressBars = new ProgressBar[9];
+    private Button[] claimButtons = new Button[9];
     private ImageView imagePreview;
 
     @Override
@@ -38,6 +38,9 @@ public class Tab3Activity extends AppCompatActivity {
         progressBars[3] = findViewById(R.id.progressQuest4);
         progressBars[4] = findViewById(R.id.progressQuest5);
         progressBars[5] = findViewById(R.id.progressQuest6);
+        progressBars[6] = findViewById(R.id.progressQuest7);
+        progressBars[7] = findViewById(R.id.progressQuest8);
+        progressBars[8] = findViewById(R.id.progressQuest9);
 
         claimButtons[0] = findViewById(R.id.btnClaim1);
         claimButtons[1] = findViewById(R.id.btnClaim2);
@@ -45,6 +48,9 @@ public class Tab3Activity extends AppCompatActivity {
         claimButtons[3] = findViewById(R.id.btnClaim4);
         claimButtons[4] = findViewById(R.id.btnClaim5);
         claimButtons[5] = findViewById(R.id.btnClaim6);
+        claimButtons[6] = findViewById(R.id.btnClaim7);
+        claimButtons[7] = findViewById(R.id.btnClaim8);
+        claimButtons[8] = findViewById(R.id.btnClaim9);
 
         imagePreview = findViewById(R.id.imagePreview);
         Button buttonTakePhoto = findViewById(R.id.buttonTakePhoto);
@@ -59,7 +65,7 @@ public class Tab3Activity extends AppCompatActivity {
         for (int i = 0; i < claimButtons.length; i++) {
             final int index = i;
             claimButtons[i].setOnClickListener(v -> {
-                claimQuest(index + 1); // 퀘스트 번호 1~6
+                claimQuest(index + 1); // 퀘스트 번호 1~9
             });
         }
 
@@ -68,7 +74,6 @@ public class Tab3Activity extends AppCompatActivity {
         findViewById(R.id.tab2Button).setOnClickListener(view -> startActivity(new Intent(this, Tab2Activity.class)));
         findViewById(R.id.tab3Button).setOnClickListener(view -> startActivity(new Intent(this, Tab3Activity.class)));
         findViewById(R.id.tab4Button).setOnClickListener(view -> startActivity(new Intent(this, Tab4Activity.class)));
-        findViewById(R.id.tab5Button).setOnClickListener(view -> startActivity(new Intent(this, Tab5Activity.class)));
         findViewById(R.id.tab6Button).setOnClickListener(view -> startActivity(new Intent(this, Tab6Activity.class)));
 
         loadQuestProgressFromServer();
@@ -153,13 +158,32 @@ public class Tab3Activity extends AppCompatActivity {
 
     // 반복 제거를 위한 UI 업데이트 함수
     private void updateQuestUI(List<QuestProgressResponse.Quest> quests) {
-        for (int i = 0; i < Math.min(quests.size(), 6); i++) {
+        for (int i = 0; i < Math.min(quests.size(), 9); i++) {
             QuestProgressResponse.Quest q = quests.get(i);
             double target = q.getTarget();
             int percent = (target > 0) ? (int) ((q.getProgress() / target) * 100) : 0; // 0으로 나누기 방지
             progressBars[i].setProgress(percent);
             claimButtons[i].setEnabled(q.isCompleted());
             Log.d("퀘스트응답", "퀘스트 " + (i + 1) + ": " + percent + "% 완료, 완료여부=" + q.isCompleted());
+        }
+        // 칼로리 기반 퀘스트 3개: 100, 200, 400 이상일 때 각각 버튼 활성화
+        for (QuestProgressResponse.Quest q : quests) {
+            if ("kcal".equals(q.getType())) {
+                int progress = (int)q.getProgress();
+
+                if (progress >= 100) {
+                    progressBars[6].setProgress(100);
+                    claimButtons[6].setEnabled(true);
+                }
+                if (progress >= 200) {
+                    progressBars[7].setProgress(100);
+                    claimButtons[7].setEnabled(true);
+                }
+                if (progress >= 400) {
+                    progressBars[8].setProgress(100);
+                    claimButtons[8].setEnabled(true);
+                }
+            }
         }
     }
 

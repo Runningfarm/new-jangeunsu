@@ -51,6 +51,13 @@
         android:background="@android:drawable/edit_text"
         android:textColor="#222222"
         android:textSize="16sp" />
+    <!-- 몸무게 입력 -->
+    <EditText
+        android:id="@+id/editTextRegisterWeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="체중 (kg)"
+        android:inputType="numberDecimal" />
     <!-- 회원가입 버튼 -->
     <Button
         android:id="@+id/buttonRegister"

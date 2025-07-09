@@ -94,6 +94,14 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- 6/30 -->
+    <fragment
+        android:id="@+id/resultMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="16dp"/>
+
     <!-- 보상 버튼 -->
     <Button
         android:id="@+id/btnQuestReward"

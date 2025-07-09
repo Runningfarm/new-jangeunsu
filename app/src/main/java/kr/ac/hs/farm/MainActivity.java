@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tab2Button).setOnClickListener(view -> startActivity(new Intent(MainActivity.this, Tab2Activity.class)));
         findViewById(R.id.tab3Button).setOnClickListener(view -> startActivity(new Intent(MainActivity.this, Tab3Activity.class)));
         findViewById(R.id.tab4Button).setOnClickListener(view -> startActivity(new Intent(MainActivity.this, Tab4Activity.class)));
-        findViewById(R.id.tab5Button).setOnClickListener(view -> startActivity(new Intent(MainActivity.this, Tab5Activity.class)));
         findViewById(R.id.tab6Button).setOnClickListener(view -> startActivity(new Intent(MainActivity.this, Tab6Activity.class)));
 
         // 종료 버튼 클릭 시 종료 다이얼로그 표시

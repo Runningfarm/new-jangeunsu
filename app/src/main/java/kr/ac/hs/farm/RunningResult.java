@@ -8,10 +8,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
+import android.graphics.Color; // 6/30
+import com.google.android.gms.maps.GoogleMap; // 6/30
+import com.google.android.gms.maps.OnMapReadyCallback; // 6/30
+import com.google.android.gms.maps.SupportMapFragment; // 6/30
+import com.google.android.gms.maps.CameraUpdateFactory; // 6/30
+import com.google.android.gms.maps.model.LatLng; // 6/30
+import com.google.android.gms.maps.model.PolylineOptions; // 6/30
+import com.google.android.gms.maps.model.Polyline; // 6/30
+import java.util.ArrayList;  // 6/30
 
-public class RunningResult extends AppCompatActivity {
+public class RunningResult extends AppCompatActivity implements OnMapReadyCallback {    // 6/30
 
     private TextView tvTime, tvDistance, tvKcal, tvPace;
+    private ArrayList<LatLng> runPath; // 6/30
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +33,7 @@ public class RunningResult extends AppCompatActivity {
         tvDistance = findViewById(R.id.tvDistance);
         tvKcal = findViewById(R.id.tvKcal);
         tvPace = findViewById(R.id.tvPace);
+        runPath = getIntent().getParcelableArrayListExtra("path");
 
         // Intent에서 데이터 받아오기
         Intent intent = getIntent();
@@ -42,6 +53,13 @@ public class RunningResult extends AppCompatActivity {
         if (kcal != null) tvKcal.setText(kcal);
         if (pace != null) tvPace.setText(pace);
 
+        // 지도 연결
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.resultMap);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
         // 버튼 연결 및 클릭시 토스트 메시지 띄우고 Tab3Activity로 이동
         Button btnQuestReward = findViewById(R.id.btnQuestReward);
         btnQuestReward.setOnClickListener(new View.OnClickListener() {
@@ -53,5 +71,21 @@ public class RunningResult extends AppCompatActivity {
                 finish(); // 현재 액티비티 종료
             }
         });
+
+    }
+    // 6/30
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        if (runPath != null && !runPath.isEmpty()) {
+            PolylineOptions polylineOptions = new PolylineOptions()
+                    .addAll(runPath)
+                    .width(10f)
+                    .color(Color.BLUE)
+                    .geodesic(true);
+
+            googleMap.addPolyline(polylineOptions);
+            // 시작 지점으로 카메라 이동
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(runPath.get(0), 16));
+        }
     }
 }

@@ -31,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         EditText editTextId = findViewById(R.id.editTextRegisterId);
         EditText editTextPassword = findViewById(R.id.editTextRegisterPassword);
+        EditText editTextWeight = findViewById(R.id.editTextRegisterWeight);
         Button buttonRegister = findViewById(R.id.buttonRegister);
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
@@ -38,14 +39,23 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String id = editTextId.getText().toString().trim();
                 String password = editTextPassword.getText().toString();
+                String weightStr = editTextWeight.getText().toString().trim();
 
-                if (id.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "아이디와 비밀번호를 모두 입력하세요", Toast.LENGTH_SHORT).show();
+                if (id.isEmpty() || password.isEmpty() || weightStr.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, "아이디, 비밀번호, 체중 모두 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                float weight;
+                try {
+                    weight = Float.parseFloat(weightStr);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(RegisterActivity.this, "체중은 숫자로 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 // 회원가입 요청
-                RegisterRequest request = new RegisterRequest(id, password);
+                RegisterRequest request = new RegisterRequest(id, password, weight);
 
                 ApiService api = RetrofitClient.getRetrofitInstance().create(ApiService.class);
                 Call<RegisterResponse> call = api.register(request);

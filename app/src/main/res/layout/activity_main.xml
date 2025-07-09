@@ -12,8 +12,8 @@
     <!-- 종료 버튼 -->
     <ImageButton
         android:id="@+id/exitButton"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#FFFFFF"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="12dp"
             android:background="#FFF9E6"
@@ -160,6 +160,10 @@
             android:background="@null"
             android:contentDescription="탭 1" />
 
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:id="@+id/tab2Button"
             android:layout_width="0dp"
@@ -169,14 +173,22 @@
             android:background="@null"
             android:contentDescription="탭 2" />
 
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:id="@+id/tab3Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_quest"
             android:background="@null"
-            android:contentDescription="탭 3" />
+            android:contentDescription="탭 3"
+            android:src="@drawable/ic_quest" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
 
         <ImageButton
             android:id="@+id/tab4Button"
@@ -187,14 +199,9 @@
             android:background="@null"
             android:contentDescription="탭 4" />
 
-        <ImageButton
-            android:id="@+id/tab5Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_shop"
-            android:background="@null"
-            android:contentDescription="탭 5" />
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
 
         <ImageButton
             android:id="@+id/tab6Button"

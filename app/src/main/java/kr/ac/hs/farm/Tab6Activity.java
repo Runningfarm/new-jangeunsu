@@ -31,7 +31,6 @@ public class Tab6Activity extends AppCompatActivity {
         tab2Button = findViewById(R.id.tab2Button);
         tab3Button = findViewById(R.id.tab3Button);
         tab4Button = findViewById(R.id.tab4Button);
-        tab5Button = findViewById(R.id.tab5Button);
         tab6Button = findViewById(R.id.tab6Button);
 
         // ▼ 뒤로가기 버튼 연결
@@ -55,8 +54,6 @@ public class Tab6Activity extends AppCompatActivity {
                 Tab3Activity.class)));
         tab4Button.setOnClickListener(v -> startActivity(new Intent(this,
                 Tab4Activity.class)));
-        tab5Button.setOnClickListener(v -> startActivity(new Intent(this,
-                Tab5Activity.class)));
         tab6Button.setOnClickListener(v -> startActivity(new Intent(this,
                 Tab6Activity.class)));
 
@@ -100,21 +97,20 @@ public class Tab6Activity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                             // (선택) SharedPreferences에 토큰 저장
                             String token = response.body().getToken();
+                            float weight = response.body().getWeight();
 
                             SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
-                            pref.edit().putString("token", token).apply();
-
-                            // id도 같이 저장 (로그인 입력창의 id 기준)
-                            String id = editTextId.getText().toString();
-                            pref.edit().putString("id", id).apply();
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("id", id);
+                            editor.putString("token", token);
+                            editor.putFloat("weight", weight);
+                            editor.apply();
 
                             Toast.makeText(Tab6Activity.this, "로그인 성공!", Toast.LENGTH_SHORT).show();
                             Log.d("LOGIN", "토큰: " + token);
 
-                            // TODO: 로그인 성공 후 플레이화면 등 다음 액티비티로 이동
-                            // Intent intent = new Intent(Tab6Activity.this, PlayActivity.class);
-                            // startActivity(intent);
-                            // finish();
+                            startActivity(new Intent(Tab6Activity.this, MainActivity.class));
+                            finish();
                         } else {
                             String msg = (response.body() != null) ? response.body().getMessage() : "응답이 없습니다";
                             Toast.makeText(Tab6Activity.this, "로그인 실패: " + msg, Toast.LENGTH_SHORT).show();

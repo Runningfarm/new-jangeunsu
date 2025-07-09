@@ -39,7 +39,6 @@
         <activity android:name=".Tab2Activity" android:exported="true" />
         <activity android:name=".Tab3Activity" android:exported="true" />
         <activity android:name=".Tab4Activity" android:exported="true" />
-        <activity android:name=".Tab5Activity" android:exported="true" />
         <activity android:name=".Tab6Activity" android:exported="true" />
         <activity android:name=".RunningResult" android:exported="true" />
         <activity android:name=".RegisterActivity" android:exported="true" />
