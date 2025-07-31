@@ -18,12 +18,13 @@ protected void onCreate(Bundle savedInstanceState) {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
-            mapFragment.getMapAsync(this);```
+            mapFragment.getMapAsync(this);
+```
 이렇게 변경
 
 
 loadQuestProgressFromServer()함수 안에	
-
+```java
 private void loadQuestProgressFromServer() {
         SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
         String id = pref.getString("id", null);
