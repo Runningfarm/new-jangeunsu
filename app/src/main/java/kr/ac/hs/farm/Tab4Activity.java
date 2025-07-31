@@ -3,10 +3,13 @@ package kr.ac.hs.farm;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.ImageButton;
 import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +37,8 @@ public class Tab4Activity extends AppCompatActivity {
 
     private SharedPreferences prefs;
 
+    private Chip chipBackground;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +46,6 @@ public class Tab4Activity extends AppCompatActivity {
 
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
-        // 하단 탭 버튼
         tab1Button = findViewById(R.id.tab1Button);
         tab2Button = findViewById(R.id.tab2Button);
         tab3Button = findViewById(R.id.tab3Button);
@@ -54,12 +58,10 @@ public class Tab4Activity extends AppCompatActivity {
         tab4Button.setOnClickListener(view -> startActivity(new Intent(this, Tab4Activity.class)));
         tab6Button.setOnClickListener(view -> startActivity(new Intent(this, Tab6Activity.class)));
 
-        // 상단 탭
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("농장"));
         tabLayout.addTab(tabLayout.newTab().setText("먹이"));
 
-        // 농장 카테고리 ChipGroup
         farmCategoryGroup = findViewById(R.id.farmCategoryGroup);
         chipFence = findViewById(R.id.chip_fence);
         chipCrop = findViewById(R.id.chip_crop);
@@ -69,25 +71,24 @@ public class Tab4Activity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         itemList = new ArrayList<>();
-        loadItems("울타리");  // 기본으로 울타리
+        loadItems("울타리");
 
-        farmCategoryGroup.setVisibility(View.VISIBLE); // <-- 이 줄 추가!
-        chipFence.setChecked(true); // 울타리 chip 기본 선택 표시
+        farmCategoryGroup.setVisibility(View.VISIBLE);
+        chipFence.setChecked(true);
 
-        adapter = new ItemAdapter(itemList, this, item -> { });
+        adapter = new ItemAdapter(itemList, this, null);
         recyclerView.setAdapter(adapter);
 
-        // 상단 탭 선택 이벤트
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 String category = tab.getText().toString();
                 if (category.equals("농장")) {
-                    farmCategoryGroup.setVisibility(android.view.View.VISIBLE);
+                    farmCategoryGroup.setVisibility(View.VISIBLE);
                     chipFence.setChecked(true);
                     loadItems("울타리");
                 } else {
-                    farmCategoryGroup.setVisibility(android.view.View.GONE);
+                    farmCategoryGroup.setVisibility(View.GONE);
                     loadItems("먹이");
                 }
                 adapter.updateList(itemList);
@@ -97,7 +98,6 @@ public class Tab4Activity extends AppCompatActivity {
             @Override public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-        // 농장 하위 카테고리 Chip 클릭
         chipFence.setOnClickListener(v -> {
             loadItems("울타리");
             adapter.updateList(itemList);
@@ -112,6 +112,15 @@ public class Tab4Activity extends AppCompatActivity {
             loadItems("가구");
             adapter.updateList(itemList);
         });
+
+        chipBackground = findViewById(R.id.chip_background);
+
+        chipBackground.setOnClickListener(v -> {
+            loadItems("배경");
+            adapter.updateList(itemList);
+        });
+
+
     }
 
     private void loadItems(String category) {
@@ -134,8 +143,7 @@ public class Tab4Activity extends AppCompatActivity {
             };
 
             for (int i = 0; i < cropNames.length; i++) {
-                String resName = cropNames[i];
-                int resId = getResources().getIdentifier(resName, "drawable", getPackageName());
+                int resId = getResources().getIdentifier(cropNames[i], "drawable", getPackageName());
                 if (resId != 0) {
                     itemList.add(new Item("작물 " + (i + 1), "작물", 0, resId, true));
                 }
@@ -149,25 +157,35 @@ public class Tab4Activity extends AppCompatActivity {
             };
 
             for (int i = 0; i < furnitureNames.length; i++) {
-                String resName = furnitureNames[i];
-                int resId = getResources().getIdentifier(resName, "drawable", getPackageName());
+                int resId = getResources().getIdentifier(furnitureNames[i], "drawable", getPackageName());
                 if (resId != 0) {
                     itemList.add(new Item("가구 " + (i + 1), "가구", 0, resId, true));
                 }
             }
 
-        } else if (category.equals("먹이")) {
+        }
+
+        else if (category.equals("배경")) {
+            String[] bgNames = {"grass_tiles", "soil_tiles", "stone_tiles"};
+            for (String bg : bgNames) {
+                int resId = getResources().getIdentifier(bg, "drawable", getPackageName());
+                if (resId != 0) {
+                    itemList.add(new Item("배경", "배경", 0, resId, true));
+                }
+            }
+        }
+
+        else if (category.equals("먹이")) {
             int feedImageRes = R.drawable.feed_item;
             int count = prefs.getInt(KEY_FOOD_COUNT, 3);
             itemList.add(new Item("먹이 아이템", "먹이", count, feedImageRes, true));
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        if (tabLayout.getSelectedTabPosition() == 0) { // 농장
+        if (tabLayout.getSelectedTabPosition() == 0) {
             loadItems("울타리");
         } else {
             loadItems("먹이");

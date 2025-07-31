@@ -3,19 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFDF6"
-    android:padding="16dp"
     tools:context=".MainActivity">
 
-    <!-- 종료 버튼 -->
     <ImageButton
         android:id="@+id/exitButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
-        android:backgroundTint="#FFFFFF"
+        android:backgroundTint="#FFFDF6"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:scaleType="fitCenter"
         app:tint="#333333"
@@ -23,36 +22,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 우측 상단 편지함 -->
-    <ImageButton
-        android:id="@+id/mailButton"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:backgroundTint="#FFFFFF"
-        android:src="@android:drawable/ic_dialog_email"
-        app:tint="#333333"
-        android:contentDescription="편지함 열기"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="10dp" />
-
-    <!-- 중앙 농장 영역 -->
     <FrameLayout
         android:id="@+id/farmArea"
         android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="0dp"
         android:background="#FFFAF0"
         android:elevation="2dp"
         android:clipToOutline="true"
         app:layout_constraintTop_toBottomOf="@id/exitButton"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- 캐릭터 버튼 -->
         <ImageButton
             android:id="@+id/characterButton"
             android:layout_width="match_parent"
@@ -63,8 +44,6 @@
             android:src="@drawable/ic_character"
             android:contentDescription="캐릭터 이미지" />
 
-
-        <!-- 캐릭터 메뉴 -->
         <LinearLayout
             android:id="@+id/characterMenu"
             android:layout_width="wrap_content"
@@ -76,11 +55,9 @@
             android:background="#FFF9E6"
             android:padding="10dp"
             android:elevation="6dp"
-            android:layout_marginTop="8dp"
             android:clipToPadding="false"
             android:gravity="center_vertical">
 
-            <!-- 레벨 표시 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -110,7 +87,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- 먹이 개수 -->
             <TextView
                 android:id="@+id/foodCountText"
                 android:layout_width="wrap_content"
@@ -122,7 +98,6 @@
                 android:layout_marginEnd="12dp"
                 android:textStyle="bold" />
 
-            <!-- 먹이주기 버튼 -->
             <Button
                 android:id="@+id/feedButton"
                 android:layout_width="wrap_content"
@@ -134,83 +109,159 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="top|end"
+            android:gravity="end"
+            android:paddingTop="7dp"
+            android:paddingRight="7dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/editModeButton"
+                android:layout_width="55dp"
+                android:layout_height="30dp"
+                android:text="수정하기"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:padding="4dp"
+                android:textColor="#2E7D32"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/rounded_button_bg_green" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/editCompleteButton"
+                android:layout_width="55dp"
+                android:layout_height="30dp"
+                android:text="수정완료"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:padding="4dp"
+                android:textColor="#0277BD"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/rounded_button_bg_blue" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/resetButton"
+                android:layout_width="55dp"
+                android:layout_height="30dp"
+                android:text="초기화"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:padding="4dp"
+                android:textColor="#C62828"
+                android:background="@drawable/rounded_button_bg_yellow" />
+        </LinearLayout>
+
     </FrameLayout>
 
-    <!-- 하단 바 -->
     <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:orientation="horizontal"
-        android:background="#F5F5F5"
-        android:paddingTop="6dp"
-        android:elevation="8dp"
+        android:background="#FFFFFF"
+        android:padding="6dp"
         android:gravity="center"
-        android:weightSum="6"
+        android:elevation="10dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="center_horizontal"
+        android:clipToPadding="false"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="#FFFFFF"
+        android:backgroundTintMode="src_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageButton
-            android:id="@+id/tab1Button"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_home"
-            android:background="@null"
-            android:contentDescription="탭 1" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <Space
-            android:layout_width="16dp"
-            android:layout_height="wrap_content" />
+            <ImageButton
+                android:id="@+id/tab1Button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_home"
+                android:background="@drawable/bottom_tab_selector"
+                android:scaleType="centerInside"
+                android:contentDescription="홈" />
 
-        <ImageButton
-            android:id="@+id/tab2Button"
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_running"
-            android:background="@null"
-            android:contentDescription="탭 2" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <Space
-            android:layout_width="16dp"
-            android:layout_height="wrap_content" />
+            <ImageButton
+                android:id="@+id/tab2Button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_running"
+                android:background="@drawable/bottom_tab_selector"
+                android:scaleType="centerInside"
+                android:contentDescription="운동" />
+        </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/tab3Button"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@null"
-            android:contentDescription="탭 3"
-            android:src="@drawable/ic_quest" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <Space
-            android:layout_width="16dp"
-            android:layout_height="wrap_content" />
+            <ImageButton
+                android:id="@+id/tab3Button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_quest"
+                android:background="@drawable/bottom_tab_selector"
+                android:scaleType="centerInside"
+                android:contentDescription="퀘스트" />
+        </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/tab4Button"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_inventory"
-            android:background="@null"
-            android:contentDescription="탭 4" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <Space
-            android:layout_width="16dp"
-            android:layout_height="wrap_content" />
+            <ImageButton
+                android:id="@+id/tab4Button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_inventory"
+                android:background="@drawable/bottom_tab_selector"
+                android:scaleType="centerInside"
+                android:contentDescription="인벤토리" />
+        </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/tab6Button"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_mypage"
-            android:background="@null"
-            android:contentDescription="탭 6" />
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/tab6Button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_mypage"
+                android:background="@drawable/bottom_tab_selector"
+                android:scaleType="centerInside"
+                android:contentDescription="마이페이지" />
+        </LinearLayout>
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
