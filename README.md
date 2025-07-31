@@ -1,7 +1,7 @@
 Tab2Activity.java
 onCreate함수 안에 
 
-'''protected void onCreate(Bundle savedInstanceState) {
+'protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab2);
 
@@ -18,7 +18,7 @@ onCreate함수 안에
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
-            mapFragment.getMapAsync(this);''' 이렇게 변경	
+            mapFragment.getMapAsync(this);' 이렇게 변경	
 
 
 loadQuestProgressFromServer()함수 안에	
