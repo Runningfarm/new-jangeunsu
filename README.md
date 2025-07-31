@@ -1,6 +1,5 @@
 Tab2Activity.java
-onCreate함수 안에 
-
+onCreate함수 안에 ;
 'protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab2);
