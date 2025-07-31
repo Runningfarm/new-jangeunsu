@@ -1,6 +1,6 @@
 Tab2Activity.java
-onCreate함수 안에 
-'''protected void onCreate(Bundle savedInstanceState) {
+onCreate함수 안에 	
+protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab2);
 
@@ -17,10 +17,10 @@ onCreate함수 안에
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
-            mapFragment.getMapAsync(this);''' 이렇게 변경
+            mapFragment.getMapAsync(this);''' 이렇게 변경	
 
 
-loadQuestProgressFromServer()함수 안에
+loadQuestProgressFromServer()함수 안에	
 
 private void loadQuestProgressFromServer() {
         SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
@@ -31,17 +31,17 @@ private void loadQuestProgressFromServer() {
         ApiService api = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         String token = pref.getString("token", null); // 7/30
         Call<QuestProgressResponse> call = api.getQuestProgress("Bearer " + token); // 7/30
-        call.enqueue(new Callback<QuestProgressResponse>() { 이렇게 변경
+        call.enqueue(new Callback<QuestProgressResponse>() { 이렇게 변경		
 
 
 activity_tab2.xml
-63~71번째 줄에 text="3/5 완료"를 text=""로 변경
+63~71번째 줄에 text="3/5 완료"를 text=""로 변경		
 
 
-User.js 수정함 파일 참고 
+User.js 수정함 파일 참고 	
 
 index.js
-app.get("/quest/progress", verifyToken, async (req, res) => { 윗줄에
+app.get("/quest/progress", verifyToken, async (req, res) => { 윗줄에	
 
 // 날짜 구하는 함수(YYYY-MM-DD)
 function getTodayStr() {
@@ -76,7 +76,7 @@ app.get("/quest/progress", verifyToken, async (req, res) => {
   } catch (err) {
     res.status(500).json({ success: false, message: "서버 오류" });
   }
-});
+});		
 
 
 app.post("/run/complete", verifyToken, async (req, res) => { 밑에
@@ -121,7 +121,7 @@ app.post("/run/complete", verifyToken, async (req, res) => { 밑에
       }
     }
 
-넣기
+넣기		
 
 app.post("/quest/claim", verifyToken, async (req, res) => { 밑에
 const quest = user.quests[index]; 밑에
@@ -145,7 +145,7 @@ const quest = user.quests[index]; 밑에
 
     await user.save();
 
-이렇게 수정
+이렇게 수정		
 
 app.post("/register", async (req, res) => { 안에 questDate: getTodayStr(), 추가
 // 유저 생성 및 저장
@@ -155,12 +155,12 @@ app.post("/register", async (req, res) => { 안에 questDate: getTodayStr(), 추
       weight,
       name,
       questDate: getTodayStr(), // 추가!
-    });
+    });		
 
 
 
 Tab3Activity.java
-30, 31번째줄 [9]를 둘 다 [13]으로 변경
+30, 31번째줄 [9]를 둘 다 [13]으로 변경		
 
 	progressBars[9] = findViewById(R.id.progressQuest10);
         progressBars[10] = findViewById(R.id.progressQuest11);
@@ -173,10 +173,10 @@ Tab3Activity.java
         claimButtons[11] = findViewById(R.id.btnClaim12);
         claimButtons[12] = findViewById(R.id.btnClaim13);
 
-추가
+추가		
 
 166번째 줄 퀘스트 보상 수령 실패가 아닌 퀘스트 중복 보상 받기 불가로 text변경
-178번쨰 줄 for (int i = 0; i < Math.min(quests.size(), 13); i++) { 이렇게 변경 
+178번쨰 줄 for (int i = 0; i < Math.min(quests.size(), 13); i++) { 이렇게 변경 		
 
 activity_tab3.xml 
 <!-- 10번 퀘스트 -->
