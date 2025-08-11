@@ -507,3 +507,99 @@ activity_tab3.xml
 #
 <h1>8/11 수정사항</h1>
 #
+User.js
+```
+const userSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  weight: { type: Number }, // kg
+  name: { type: String },
+  totalDistance: { type: Number, default: 0 },
+  totalFood: { type: Number, default: 0 },
+  totalCalories: { type: Number, default: 0 },
+```
+바로 밑에 줄에
+```
+totalRunTime: { type: Number, default: 0 },
+```
+추가
+
+index.js
+//먹이
+user.totalFood += Math.floor(distance * 10);
+밑에 줄에
+ // 총 누적 달리기 시간(초) 누적
+    if (typeof time === "number" && time > 0) {
+      user.totalRunTime = (user.totalRunTime || 0) + time;
+    }
+추가
+
+app.get("/myfarm", verifyToken, async (req, res) => { 안에
+res.json({
+      success: true,
+      message: "농장 정보 가져오기 성공!",
+      id: user.id,
+      weight: user.weight,
+      totalDistance: user.totalDistance,
+      totalFood: user.totalFood,
+바로 밑에 줄에
+totalRunTime: user.totalRunTime || 0,
+추가
+
+app.post("/login", async (req, res) => { 안에
+res.json({
+      success: true,
+      message: "로그인 성공!",
+      token,
+      id: user.id,
+      name: user.name,
+      weight: user.weight,
+      totalDistance: user.totalDistance,
+      totalFood: user.totalFood,
+      questsCompleted: user.questsCompleted,
+    });
+에서 totalFood: user.totalFood,와 questsCompleted: user.questsCompleted, 사이에 totalRunTime: user.totalRunTime || 0, 
+추가
+
+LoginResponse.java
+private long totalRunTime;
+public long getTotalRunTime() {
+        return totalRunTime;
+    }
+추가
+
+EditProfileActivity.java
+import android.widget.Toast; 밑에 줄에
+import android.widget.TextView;
+추가
+
+private Button buttonUpdate; 밑에 줄에
+private TextView tvTotalRunTimeProfile;
+추가
+
+buttonUpdate = findViewById(R.id.buttonUpdate); 밑에 줄에
+tvTotalRunTimeProfile = findViewById(R.id.tvTotalRunTimeProfile);
+추가
+
+float weight = pref.getFloat("weight", 0f); 밑에 줄에
+long totalRunSecs = pref.getLong("total_run_time_seconds", 0L);
+        tvTotalRunTimeProfile.setText(formatSecondsToHMS(totalRunSecs));
+추가
+
+onCreate 함수 바깥쪽에 제일 밑에
+private String formatSecondsToHMS(long seconds) {
+        long h = seconds / 3600;
+        long m = (seconds % 3600) / 60;
+        long s = seconds % 60;
+        return String.format("%02d:%02d:%02d", h, m, s);
+    }
+추가
+
+Tab2Activity.java
+stopRunning(); 밑에 줄에
+long prev = pref.getLong("total_run_time_seconds", 0L);
+                        long add = elapsedTime / 1000L;   // 이번 러닝 소요 시간(초)
+                        pref.edit().putLong("total_run_time_seconds", prev + add).apply();
+추가
+
+
