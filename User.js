@@ -83,6 +83,43 @@ const userSchema = new mongoose.Schema({
         distance: 10,
         timeLimit: 3600, // 1시간 = 3600초
       },
+      // 누적시간 퀘스트 (단위: 초)
+      // 10시간
+      {
+        type: "time_total",
+        target: 10 * 3600,
+        progress: 0,
+        completed: false,
+        reward: 5,
+        claimed: false,
+      },
+      // 30시간
+      {
+        type: "time_total",
+        target: 30 * 3600,
+        progress: 0,
+        completed: false,
+        reward: 10,
+        claimed: false,
+      },
+      // 50시간
+      {
+        type: "time_total",
+        target: 50 * 3600,
+        progress: 0,
+        completed: false,
+        reward: 15,
+        claimed: false,
+      },
+      // 100시간
+      {
+        type: "time_total",
+        target: 100 * 3600,
+        progress: 0,
+        completed: false,
+        reward: 25,
+        claimed: false,
+      },
     ],
   },
   questDate: { type: String },
