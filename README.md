@@ -1,3 +1,6 @@
+<h1>Tab2Activity.java, Tab3Activity.java, activity_tab3.xml는 파일 밖에 나와있는거로 확인해주세요!</h1>	
+<h3>하실때 Ctrl + F로 찾으면서 하시면 더 편하실거같습니다!</h3>
+<br>
 7/31 수정사항
 파일 참고하시면서 하시면 될 것 같습니다
 잘 모르시겠는 부분은 연락주세요
@@ -646,5 +649,494 @@ long prev = pref.getLong("total_run_time_seconds", 0L);
                         pref.edit().putLong("total_run_time_seconds", prev + add).apply();
 ```
 추가
+
+<h1>8/12 수정사항</h1>
+index.js
+
+```
+// 날짜 비교 후 리셋
+const today = getTodayStr();
+if (user.questDate !== today) {
+  // 날짜가 다르면 (단, 누적시간 퀘스트는 제외!)
+  user.quests.forEach((q) => {
+```
+밑에 줄에
+```
+if (q.type === "time_total") return; // ← 누적시간 퀘스트는 초기화 금지
+```
+추가
+
+```
+// 총 누적 달리기 시간(초) 누적
+    if (typeof time === "number" && time > 0) {
+      user.totalRunTime = (user.totalRunTime || 0) + time;
+    }
+```
+밑에 줄에
+```
+// 누적시간 퀘스트(type: "time_total") 진행/완료 처리 (단위: 초)
+    user.quests.forEach((q) => {
+      if (q.type === "time_total" && !q.completed) {
+        q.progress += time; // 초 단위로 누적
+        if (q.progress >= q.target) {
+          q.progress = q.target;
+          q.completed = true;
+          q.completedAt = new Date();
+        }
+      }
+    });
+```
+추가하고 5줄 밑에
+```
+res.json({
+      success: true,
+      message: "런닝 결과 저장+퀘스트 반영 완료!",
+      quests: user.quests,
+      totalDistance: user.totalDistance,
+      totalFood: user.totalFood,
+      totalCalories: user.totalCalories,
+```
+이 부분 밑에 줄에
+```
+totalRunTime: user.totalRunTime || 0,
+```
+추가
+
+
+User.js
+```
+// 13번째: 60분 안에 10km 달리기
+      {
+        type: "10km_60min",
+        target: 1,
+        progress: 0,
+        completed: false,
+        reward: 15,
+        distance: 10,
+        timeLimit: 3600, // 1시간 = 3600초
+      },
+```
+밑에 줄에
+```
+// 누적시간 퀘스트 (단위: 초)
+      // 10시간
+      {
+        type: "time_total",
+        target: 10 * 3600,
+        progress: 0,
+        completed: false,
+        reward: 5,
+        claimed: false,
+      },
+      // 30시간
+      {
+        type: "time_total",
+        target: 30 * 3600,
+        progress: 0,
+        completed: false,
+        reward: 10,
+        claimed: false,
+      },
+      // 50시간
+      {
+        type: "time_total",
+        target: 50 * 3600,
+        progress: 0,
+        completed: false,
+        reward: 15,
+        claimed: false,
+      },
+      // 100시간
+      {
+        type: "time_total",
+        target: 100 * 3600,
+        progress: 0,
+        completed: false,
+        reward: 25,
+        claimed: false,
+      },
+```
+추가
+
+
+Tab2Activity.java
+
+```
+private void sendRunResultToServer() {
+```
+밑에 줄에
+```
+// 앱 터짐 방지
+        if (polylineOptions == null) {
+            polylineOptions = new PolylineOptions();
+        }
+```
+추가
+
+Tab3Activity.java
+```
+private ProgressBar[] progressBars = new ProgressBar[13];
+```
+을
+```
+private ProgressBar[] progressBars = new ProgressBar[17];
+```
+로 변경
+
+```
+private Button[] claimButtons = new Button[13];
+```
+을
+```
+private Button[] claimButtons = new Button[17];
+```
+로 변경
+
+```
+progressBars[12] = findViewById(R.id.progressQuest13);
+```
+밑에
+```
+progressBars[13] = findViewById(R.id.progressQuest14);
+        progressBars[14] = findViewById(R.id.progressQuest15);
+        progressBars[15] = findViewById(R.id.progressQuest16);
+        progressBars[16] = findViewById(R.id.progressQuest17);
+```
+추가
+
+```
+claimButtons[12] = findViewById(R.id.btnClaim13);
+```
+밑에
+```
+claimButtons[13] = findViewById(R.id.btnClaim14);
+        claimButtons[14] = findViewById(R.id.btnClaim15);
+        claimButtons[15] = findViewById(R.id.btnClaim16);
+        claimButtons[16] = findViewById(R.id.btnClaim17);
+```
+추가
+
+```
+private void updateQuestUI(List<QuestProgressResponse.Quest> quests) {
+        for (int i = 0; i < Math.min(quests.size(), 13); i++) {
+```
+를
+```
+private void updateQuestUI(List<QuestProgressResponse.Quest> quests) {
+        for (int i = 0; i < Math.min(quests.size(), 17); i++) {
+```
+로 변경
+
+
+activity_tab3.xml
+퀘스트 4개 추가
+```
+<!-- 14번 퀘스트 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="6dp"
+                        android:background="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/trophy"
+                                android:contentDescription="보상 이미지" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="누적 10시간 완료 퀘스트"
+                                    android:textColor="#5D7755"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/gowundodum_regular" />
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp">
+
+                                    <ProgressBar
+                                        android:id="@+id/progressQuest14"
+                                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="12dp"
+                                        android:max="100"
+                                        android:progress="30"
+                                        android:progressDrawable="@drawable/progress_green_custom" />
+
+                                    <ImageView
+                                        android:id="@+id/boxReward14"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="end|center_vertical"
+                                        android:src="@drawable/box_locked"
+                                        android:contentDescription="보상 상자" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btnClaim14"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="보상받기"
+                                android:enabled="false"
+                                android:textColor="#5D7755"
+                                android:backgroundTint="#FFF7D1"
+                                android:textStyle="bold"
+                                android:layout_marginStart="12dp"
+                                android:elevation="2dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <!-- 15번 퀘스트 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="6dp"
+                        android:background="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/trophy"
+                                android:contentDescription="보상 이미지" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="누적 30시간 완료 퀘스트"
+                                    android:textColor="#5D7755"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/gowundodum_regular" />
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp">
+
+                                    <ProgressBar
+                                        android:id="@+id/progressQuest15"
+                                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="12dp"
+                                        android:max="100"
+                                        android:progress="30"
+                                        android:progressDrawable="@drawable/progress_green_custom" />
+
+                                    <ImageView
+                                        android:id="@+id/boxReward15"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="end|center_vertical"
+                                        android:src="@drawable/box_locked"
+                                        android:contentDescription="보상 상자" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btnClaim15"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="보상받기"
+                                android:enabled="false"
+                                android:textColor="#5D7755"
+                                android:backgroundTint="#FFF7D1"
+                                android:textStyle="bold"
+                                android:layout_marginStart="12dp"
+                                android:elevation="2dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <!-- 16번 퀘스트 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="6dp"
+                        android:background="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/trophy"
+                                android:contentDescription="보상 이미지" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="누적 50시간 완료 퀘스트"
+                                    android:textColor="#5D7755"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/gowundodum_regular" />
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp">
+
+                                    <ProgressBar
+                                        android:id="@+id/progressQuest16"
+                                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="12dp"
+                                        android:max="100"
+                                        android:progress="30"
+                                        android:progressDrawable="@drawable/progress_green_custom" />
+
+                                    <ImageView
+                                        android:id="@+id/boxReward16"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="end|center_vertical"
+                                        android:src="@drawable/box_locked"
+                                        android:contentDescription="보상 상자" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btnClaim16"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="보상받기"
+                                android:enabled="false"
+                                android:textColor="#5D7755"
+                                android:backgroundTint="#FFF7D1"
+                                android:textStyle="bold"
+                                android:layout_marginStart="12dp"
+                                android:elevation="2dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <!-- 17번 퀘스트 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="6dp"
+                        android:background="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/trophy"
+                                android:contentDescription="보상 이미지" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="누적 100시간 완료 퀘스트"
+                                    android:textColor="#5D7755"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/gowundodum_regular" />
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp">
+
+                                    <ProgressBar
+                                        android:id="@+id/progressQuest17"
+                                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="12dp"
+                                        android:max="100"
+                                        android:progress="30"
+                                        android:progressDrawable="@drawable/progress_green_custom" />
+
+                                    <ImageView
+                                        android:id="@+id/boxReward17"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="end|center_vertical"
+                                        android:src="@drawable/box_locked"
+                                        android:contentDescription="보상 상자" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btnClaim17"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="보상받기"
+                                android:enabled="false"
+                                android:textColor="#5D7755"
+                                android:backgroundTint="#FFF7D1"
+                                android:textStyle="bold"
+                                android:layout_marginStart="12dp"
+                                android:elevation="2dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+```
 
 
