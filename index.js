@@ -39,6 +39,7 @@ app.get("/quest/progress", verifyToken, async (req, res) => {
     if (user.questDate !== today) {
       // 날짜가 다르면 모든 퀘스트 progress, completed 초기화
       user.quests.forEach((q) => {
+        if (q.type === "time_total") return; // ← 누적시간 퀘스트는 초기화 금지
         q.progress = 0;
         q.completed = false;
         q.completedAt = undefined;
@@ -316,6 +317,18 @@ app.post("/run/complete", verifyToken, async (req, res) => {
       user.totalRunTime = (user.totalRunTime || 0) + time;
     }
 
+    // 누적시간 퀘스트(type: "time_total") 진행/완료 처리 (단위: 초)
+    user.quests.forEach((q) => {
+      if (q.type === "time_total" && !q.completed) {
+        q.progress += time; // 초 단위로 누적
+        if (q.progress >= q.target) {
+          q.progress = q.target;
+          q.completed = true;
+          q.completedAt = new Date();
+        }
+      }
+    });
+
     await user.save();
     console.log("user.save() 이후 user.quests:", user.quests);
 
@@ -326,6 +339,7 @@ app.post("/run/complete", verifyToken, async (req, res) => {
       totalDistance: user.totalDistance,
       totalFood: user.totalFood,
       totalCalories: user.totalCalories,
+      totalRunTime: user.totalRunTime || 0,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: "서버 오류", err });
