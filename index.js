@@ -502,7 +502,8 @@ app.post("/user/update", async (req, res) => {
 });
 
 // 서버 실행
-app.listen(3000, "192.168.45.19", () => {
+app.listen(3000, "0.0.0.0", () => {
   //자기 아이피주소 넣기 CMD에서 ipconfig치면 알 수 있음
   console.log(`🚀 서버 실행 중`);
 });
+
